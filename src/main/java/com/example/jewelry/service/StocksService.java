@@ -24,6 +24,7 @@ public class StocksService {
         stocksSet.addAll(newStocks);
         stock.setItems(stocksSet);
         stockRepository.save(stock);
+        log.info("Stocks saved/updated successfully : {}", stock.getItems());
         return new Response(newStocks, "Stock saved successfully");
     }
 
@@ -32,6 +33,7 @@ public class StocksService {
         if (stockRepository.existsById(1L)) {
             stocks = stockRepository.findById(1L).get().getItems();
         }
+        log.info("Fetched stocks successfully : {}", stocks);
         return new Response(stocks, "Stocks fetched successfully");
     }
 }
