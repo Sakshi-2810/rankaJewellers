@@ -1,23 +1,24 @@
-# Stage 1: Build the JAR using Maven
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# ---------- Stage 1: Build the JAR ----------
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy the pom.xml and download dependencies first (for caching)
+# Copy pom.xml first to leverage Docker cache
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Copy the rest of the source code and build
+# Copy source and build
 COPY src ./src
 RUN mvn clean install -DskipTests
 
-# Stage 2: Run the JAR in a smaller image
-FROM eclipse-temurin:17-jdk-alpine
+
+# ---------- Stage 2: Runtime ----------
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy the built JAR from the build stage
+# Copy JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose port if needed (e.g., Spring Boot defaults to 8080)
-#EXPOSE 8001
+# Spring Boot default port
+EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","app.jar"]
