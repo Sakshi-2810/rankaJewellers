@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Archive | Ranka Jewellers</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-dark: #b8962e;
+            --silver: #cfd2d6;
+            --silver-dark: #9da3a8;
+            --bg-color: #f4f1ea;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --transition: all 0.35s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, #0c0c0c, #1a1a1a);
+            padding: 45px 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .sidebar-brand h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: var(--gold);
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-brand span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--silver);
+            margin-top: 8px;
+        }
+
+        .nav-menu {
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--silver);
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(212,175,55,0.12);
+            color: var(--gold);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.35);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-flex h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            margin: 0;
+        }
+
+        .search-bar {
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            width: 320px;
+            outline: none;
+            font-family: 'Poppins';
+            font-size: 0.85rem;
+        }
+
+        /* ===== TABLE CARD ===== */
+        .card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212,175,55,0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .table-wrapper {
+            overflow-y: auto;
+            overflow-x: auto;
+            flex-grow: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #fafafa;
+            padding: 18px 15px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            border-bottom: 2px solid #eee;
+        }
+
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .status-badge {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .paid {
+            background: #eaf7f0;
+            color: #27ae60;
+        }
+
+        .due {
+            background: #fff1f1;
+            color: #e74c3c;
+        }
+
+        .btn-view {
+            color: var(--gold);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-view:hover {
+            color: var(--gold-dark);
+            letter-spacing: 0.4px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        .table-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--gold), var(--gold-dark));
+            border-radius: 10px;
+        }
+
+        /* ===== LOADER ===== */
+        #globalLoader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(3px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #eee;
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-text {
+            margin-top: 15px;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="globalLoader">
+    <div class="spinner"></div>
+    <div class="loader-text">Accessing Archives...</div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <h1>Ranka</h1>
+        <span>Jewellers</span>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i> Dashboard
+        </a>
+        <a href="stock.html" class="nav-item">
+            <i class="fa-solid fa-gem"></i> Stock Management
+        </a>
+        <a href="invoice.html" class="nav-item">
+            <i class="fa-solid fa-file-invoice"></i> Create Invoice
+        </a>
+        <a href="all-invoices.html" class="nav-item active">
+            <i class="fa-solid fa-archive"></i> Invoice Archive
+        </a>
+    </nav>
+</aside>
+
+<main class="main-content">
+    <div class="header-flex">
+        <h1>Invoice Archive</h1>
+        <input type="text" class="search-bar" placeholder="Search customer or invoice ID..." id="searchInput" onkeyup="filterInvoices()">
+    </div>
+
+    <div class="card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Invoice ID</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Balance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceListBody"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    function showLoader(){document.getElementById('globalLoader').style.display='flex'}
+    function hideLoader(){document.getElementById('globalLoader').style.display='none'}
+
+    async function loadInvoices(){
+        const body=document.getElementById('invoiceListBody')
+        showLoader()
+        try{
+            const res=await fetch('/invoices')
+            const data=await res.json()
+            const invoices=data.data||data
+            body.innerHTML=''
+            if(!invoices||invoices.length===0){
+                body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#999;">No invoices found</td></tr>'
+            }else{
+                invoices.forEach(inv=>{
+                    const bal=inv.summary.balanceDue
+                    body.innerHTML+=`
+                        <tr>
+                            <td>${inv.date}</td>
+                            <td style="font-weight:600">${inv.invoiceNumber}</td>
+                            <td>${inv.customer.name}</td>
+                            <td style="font-weight:600;color:var(--gold)">₹${inv.summary.grandTotal.toLocaleString('en-IN')}</td>
+                            <td><span class="status-badge ${bal<=0?'paid':'due'}">${bal<=0?'PAID':'₹'+bal+' DUE'}</span></td>
+                            <td><a class="btn-view" onclick='viewInvoice(${JSON.stringify(inv)})'>View / Edit</a></td>
+                        </tr>`
+                })
+            }
+        }catch{
+            body.innerHTML='<tr><td colspan="6" style="text-align:center;color:red;padding:40px;">Error loading data</td></tr>'
+        }finally{setTimeout(hideLoader,500)}
+    }
+
+    function viewInvoice(inv){
+        sessionStorage.setItem('editInvoiceData',JSON.stringify(inv))
+        location.href='invoice.html'
+    }
+
+    function filterInvoices(){
+        const val=document.getElementById('searchInput').value.toUpperCase()
+        document.querySelectorAll('#invoiceListBody tr').forEach(r=>{
+            r.style.display=r.innerText.toUpperCase().includes(val)?'':'none'
+        })
+    }
+
+    window.onload=loadInvoices
+</script>
+
+</body>
+</html>

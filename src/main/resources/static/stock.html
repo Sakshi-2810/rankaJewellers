@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management | Ranka Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+    --gold-gradient: linear-gradient(
+        135deg,
+        #c5a028 0%,
+        #e1c45e 50%,
+        #c5a028 100%
+    );
+
+    --gold-solid: #c5a028;
+    --gold-dark: #a88a1f;
+    --gold-light: #f4ece1;
+
+    --silver: #cfd2d6;
+    --silver-dark: #9da3a8;
+
+    --dark-sidebar: #1a1a1a;
+    --dark-charcoal: #1c1c1c;
+
+    --bg-color: #f4f1ea;
+    --text-main: #2d3436;
+
+    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-charcoal);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- LEFT NAVIGATION RIBBON --- */
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, #0c0c0c, #1a1a1a);
+            padding: 45px 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.4);
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .sidebar-brand h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: var(--gold-solid);
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-brand span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--silver);
+            margin-top: 8px;
+        }
+
+        .nav-menu {
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--silver);
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(212,175,55,0.12);
+            color: var(--gold-solid);
+        }
+
+        .nav-item.active {
+            background: var(--gold-gradient);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(197,160,40,0.35);
+        }
+
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header-title {
+            margin-bottom: 40px;
+        }
+
+        .header-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--dark-charcoal);
+        }
+
+        .header-title p {
+            color: #888;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* --- CARDS & TABLES --- */
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid rgba(197, 160, 40, 0.1);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-charcoal);
+            margin-bottom: 20px;
+            display: block;
+            border-bottom: 2px solid #f9f9f9;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        th {
+            font-family: 'Playfair Display', serif;
+            color: #aaa;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            padding: 10px 15px;
+            text-align: left;
+        }
+
+        td {
+            background: #fff;
+            padding: 12px 15px;
+            border-top: 1px solid #f9f9f9;
+            border-bottom: 1px solid #f9f9f9;
+            font-size: 0.9rem;
+        }
+
+        td:first-child { border-left: 1px solid #f9f9f9; border-radius: 8px 0 0 8px; }
+        td:last-child { border-right: 1px solid #f9f9f9; border-radius: 0 8px 8px 0; }
+
+        /* Inputs & Buttons */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--gold-solid);
+            background: #fffcf5;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        .btn-fetch { background: transparent; color: var(--gold-solid); border: 1px solid var(--gold-solid); }
+        .btn-fetch:hover { background: var(--gold-solid); color: white; }
+
+        .btn-add { background: #f9f9f9; color: var(--dark-charcoal); margin: 15px 0; }
+        .btn-add:hover { background: #eee; }
+
+        .btn-save { background: var(--gold-gradient); color: white; width: 100%; box-shadow: 0 4px 15px rgba(197, 160, 40, 0.2); }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 40, 0.3); }
+
+        .btn-delete { background: none; color: #e74c3c; font-size: 1.2rem; }
+
+        /* Status */
+        #statusMsg { text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.85rem; }
+        .text-success { color: #27ae60; }
+        .text-error { color: #e74c3c; }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(197, 160, 40, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--gold-solid);
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+      <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h1>Ranka</h1>
+            <span>Jewellers</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="stock.html" class="nav-item active">
+                <i class="fa-solid fa-gem"></i> Stock Management
+            </a>
+            <a href="invoice.html" class="nav-item">
+                <i class="fa-solid fa-file-invoice"></i> Create Invoice
+            </a>
+            <a href="all-invoices.html" class="nav-item">
+                <i class="fa-solid fa-archive"></i> Invoice Archive
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="header-title">
+                <h1>Vault Inventory</h1>
+                <p>Manage and catalogue your exquisite collections.</p>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span class="section-title" style="border:none;">Current Collections</span>
+                    <button class="btn btn-fetch" onclick="fetchAllStocks()">Refresh List</button>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="20%">ID</th>
+                            <th width="80%">Item Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="existingStockTable">
+                        <tr><td colspan="2" style="text-align:center; color:#999; padding: 30px;">Initialize inventory by clicking refresh.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <span class="section-title">Acquire New Stock</span>
+                <p style="font-size: 0.8rem; color: #888; margin-top: -10px; margin-bottom: 20px;">Detail the new pieces for secure entry into the database.</p>
+                
+                <table>
+                    <tbody id="newStockRows"></tbody>
+                </table>
+
+                <button class="btn btn-add" onclick="addNewRow()">+ Add Row</button>
+                <button class="btn btn-save" id="saveBtn" onclick="saveNewStocks()">Confirm & Secure into Inventory</button>
+
+                <div id="statusMsg"></div>
+            </div>
+        </div>
+    </main>
+
+<script>
+    // --- FETCH ALL STOCKS ---
+    async function fetchAllStocks() {
+        const tableBody = document.getElementById('existingStockTable');
+        tableBody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 30px;"><div class="loading-spinner"></div> Accessing the vault...</td></tr>';
+
+        try {
+            const response = await fetch('/stocks');
+            const data = await response.json();
+            const stocksList = data.data || data;
+
+            tableBody.innerHTML = '';
+            if (stocksList.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 30px; color: #999;">The inventory is currently empty.</td></tr>';
+            } else {
+               stocksList.forEach((stock, rowNum) => {
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td style="font-weight: 600; color: var(--gold-solid);">
+                                #${rowNum + 1}
+                            </td>
+                            <td style="font-family: 'Playfair Display', serif; font-style: italic;">
+                                ${stock}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch (error) {
+            showStatus("Connection error.", "error");
+            tableBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color: #e74c3c; padding: 30px;">Error Loading Vault.</td></tr>';
+        }
+    }
+
+    // --- ADD UI ROWS ---
+    function addNewRow() {
+        const tbody = document.getElementById('newStockRows');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td width="90%"><input type="text" class="stock-input" placeholder="e.g. Gold Necklace"></td>
+            <td width="10%" style="text-align:right;"><button class="btn-delete" onclick="this.parentElement.parentElement.remove()" style="border:none; cursor:pointer; background:none;">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+        tr.querySelector('input').focus();
+    }
+
+    // --- SAVE NEW STOCKS ---
+    async function saveNewStocks() {
+        const inputs = document.querySelectorAll('.stock-input');
+        const stocksToSave = [];
+
+        inputs.forEach(input => {
+            if (input.value.trim() !== "") {
+                stocksToSave.push(input.value.trim());
+            }
+        });
+
+        if (stocksToSave.length === 0) {
+            showStatus("Please enter item descriptions.", "error");
+            return;
+        }
+
+        const btn = document.getElementById('saveBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="loading-spinner"></div> Securing...';
+
+        try {
+            const response = await fetch('/stocks/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(stocksToSave)
+            });
+
+            if (response.ok) {
+                showStatus("Inventory updated successfully.", "success");
+                document.getElementById('newStockRows').innerHTML = ''; 
+                addNewRow();
+                fetchAllStocks(); 
+            } else {
+                showStatus("Save failed.", "error");
+            }
+        } catch (error) {
+            showStatus("Network error.", "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Confirm & Secure into Inventory";
+        }
+    }
+
+    function showStatus(msg, type) {
+        const el = document.getElementById('statusMsg');
+        el.innerText = msg;
+        el.className = type === "success" ? "text-success" : (type === "error" ? "text-error" : "");
+        setTimeout(() => { if(el.innerText === msg) el.innerText = ""; }, 4000);
+    }
+
+    window.onload = () => {
+        addNewRow();
+        fetchAllStocks();
+    };
+</script>
+
+</body>
+</html>
