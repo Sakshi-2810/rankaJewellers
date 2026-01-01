@@ -679,6 +679,10 @@ function calculate() {
     document.getElementById('grandTotal').innerText = "₹" + finalGrandTotal.toLocaleString('en-IN');
     document.getElementById('balanceDue').innerText = "₹" + (finalGrandTotal - cash).toLocaleString('en-IN');
     document.getElementById('totalInWords').innerText = priceToWords(finalGrandTotal) + " Rupees Only";
+    
+    const gold = document.getElementById('goldRate').value;
+    const silver = document.getElementById('silverRate').value;
+    sessionStorage.setItem('lastUsedRates', JSON.stringify({ gold, silver }));
 }
 
 function priceToWords(num) {
@@ -767,7 +771,6 @@ async function saveInvoice() {
         if(res.ok) {
             sessionStorage.setItem('lastUsedRates', JSON.stringify({ gold, silver }));
             alert('Invoice saved successfully!');
-            location.reload();
         } else { alert('Failed to save.'); }
     } catch (e) { alert('Server Error.'); } finally { hideLoader(); }
 }
