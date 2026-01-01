@@ -231,6 +231,114 @@
             background: linear-gradient(var(--gold), var(--gold-dark));
             border-radius: 10px;
         }
+        /* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+/* Tablet View (up to 1024px) */
+@media screen and (max-width: 1024px) {
+    body {
+        flex-direction: column; /* Move sidebar to top */
+        overflow-y: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 20px 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-brand {
+        padding-bottom: 0;
+        padding-left: 30px;
+        text-align: left;
+    }
+
+    .sidebar-brand h1 {
+        font-size: 2.2rem;
+    }
+
+    .sidebar-brand span {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+
+    .nav-menu {
+        display: flex;
+        padding: 0 30px;
+        gap: 10px;
+        margin: 0;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .main {
+        padding: 40px 30px;
+    }
+
+    .header h2 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Mobile View (up to 600px) */
+@media screen and (max-width: 600px) {
+    .sidebar {
+        flex-direction: column;
+        padding: 20px 0 10px;
+    }
+
+    .sidebar-brand {
+        padding-left: 0;
+        margin-bottom: 15px;
+    }
+
+    .nav-menu {
+        width: 100%;
+        overflow-x: auto; /* Allow menu to scroll horizontally if too wide */
+        padding: 0 15px 10px;
+        justify-content: flex-start;
+    }
+
+    .main {
+        padding: 30px 20px;
+    }
+
+    .header h2 {
+        font-size: 2rem;
+    }
+
+    .header p {
+        font-size: 0.95rem;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr; /* Force cards to stack */
+        gap: 25px;
+    }
+
+    .card {
+        padding: 35px 25px;
+    }
+
+    .card-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
+    .card h3 {
+        font-size: 1.5rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -262,7 +370,7 @@
     <main class="main">
         <div class="header">
             <h2>Luxury Business Control</h2>
-            <p>Welcome back, Administrator. Manage gold, silver, diamonds, and sales with elegance and precision.</p>
+            <p>Welcome back, Admin. Manage gold, silver, and sales with elegance and precision.</p>
         </div>
 
         <section class="card-grid">
@@ -271,7 +379,7 @@
                     <i class="fa-solid fa-ring"></i>
                 </div>
                 <h3>Stock Management</h3>
-                <p>Monitor gold & silver purity, gemstone valuation, and inventory movement with real-time accuracy.</p>
+                <p>Monitor gold & silver purity, and inventory movement with real-time accuracy.</p>
                 <div class="card-action">Manage Inventory <i class="fa-solid fa-arrow-right"></i></div>
             </a>
 

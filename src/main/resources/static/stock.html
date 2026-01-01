@@ -246,7 +246,103 @@
             margin-right: 8px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
 
+/* Tablet View (up to 1024px) */
+@media screen and (max-width: 1024px) {
+    body {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-brand {
+        padding-bottom: 0;
+        padding-left: 30px;
+        text-align: left;
+    }
+
+    .sidebar-brand h1 {
+        font-size: 2.2rem;
+    }
+
+    .nav-menu {
+        display: flex;
+        padding: 0 20px;
+        gap: 10px;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+
+    .main-content {
+        padding: 30px 20px;
+    }
+}
+
+/* Mobile View (up to 600px) */
+@media screen and (max-width: 600px) {
+    .sidebar {
+        flex-direction: column;
+        padding: 15px 0 10px;
+    }
+
+    .sidebar-brand {
+        padding-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .nav-menu {
+        width: 100%;
+        overflow-x: auto;
+        padding: 0 15px 10px;
+        justify-content: flex-start;
+        white-space: nowrap;
+    }
+
+    .header-title h1 {
+        font-size: 1.8rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    /* Make tables scrollable on small screens */
+    .card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 400px; /* Prevents text from squishing too much */
+    }
+
+    th, td {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.75rem;
+    }
+}
     </style>
 </head>
 <body>

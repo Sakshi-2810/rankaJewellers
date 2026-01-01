@@ -248,6 +248,91 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        /* ===== MEDIA QUERIES ===== */
+
+/* Tablet View (up to 1024px) */
+@media screen and (max-width: 1024px) {
+    body {
+        flex-direction: column; /* Stack sidebar on top of content */
+        overflow-y: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .sidebar-brand {
+        padding-bottom: 0;
+        padding-left: 30px;
+        text-align: left;
+    }
+
+    .sidebar-brand h1 {
+        font-size: 2rem;
+    }
+
+    .nav-menu {
+        display: flex;
+        padding: 0 20px;
+        gap: 10px;
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+
+    .main-content {
+        padding: 30px;
+    }
+}
+
+/* Mobile View (up to 600px) */
+@media screen and (max-width: 600px) {
+    .sidebar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-menu {
+        width: 100%;
+        overflow-x: auto; /* Allow icons to scroll horizontally if they don't fit */
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .search-bar {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .header-flex h1 {
+        font-size: 1.8rem;
+    }
+
+    /* Adjust table padding for tight screens */
+    td, thead th {
+        padding: 12px 10px;
+        font-size: 0.8rem;
+    }
+
+    .status-badge {
+        padding: 4px 8px;
+        font-size: 0.65rem;
+    }
+}
     </style>
 </head>
 
