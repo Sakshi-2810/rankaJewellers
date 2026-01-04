@@ -827,7 +827,7 @@ function addRow(itemData = null) {
         </td>
         <td><input type="text" class="item-purity" value="${itemData ? itemData.purity : "22K"}" readonly></td>
         <td><input type="number" class="item-qty" value="${itemData ? itemData.qty : '1'}" oninput="calculate()"></td>
-        <td><input type="number" required class="weight gWeight" value="${itemData ? itemData.gWeight : ''}" placeholder="0.000" step="0.001"></td>
+        <td><input type="number" required class="weight gWeight" value="${itemData ? itemData.gWeight : ''}" placeholder="0.000" step="0.001" oninput="syncNetWeight(this)"></td>
         <td><input type="number" required class="weight nWeight" value="${itemData ? itemData.weight : ''}" placeholder="0.000" step="0.001" oninput="calculate()"></td>
         <td><span class="making-val">${itemData ? itemData.makingCharge.toFixed(2) : '12'}</span>%</td>
         <td>₹<span class="row-total">${itemData ? itemData.total.toFixed(2) : '0.00'}</span></td>
@@ -838,6 +838,13 @@ function addRow(itemData = null) {
     const typeSelect = tr.querySelector('.type-select');
     updateTheme(typeSelect);
     if(itemData) calculate();
+}
+
+function syncNetWeight(grossInput) {
+    const row = grossInput.closest('tr');
+    const netInput = row.querySelector('.nWeight');
+    netInput.value = grossInput.value;
+    calculate();
 }
 
 function updateTheme(selectEl) {
