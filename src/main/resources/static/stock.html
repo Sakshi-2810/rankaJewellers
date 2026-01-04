@@ -421,7 +421,7 @@
         try {
             const response = await fetch('/stocks');
             const data = await response.json();
-            const stocksList = data.data || data;
+            const stocksList = data.data.items || data;
 
             tableBody.innerHTML = '';
             if (stocksList.length === 0) {

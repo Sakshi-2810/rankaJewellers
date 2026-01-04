@@ -35,9 +35,11 @@ public class Invoice {
     public static class Item {
         private String description;
         private String metal;
-        private double purity;
+        private String hsn;
+        private String purity;
+        private double qty;
         private double weight;
-        private double metalValue;
+        private double gWeight;
         private double makingCharge;
         private double total;
     }

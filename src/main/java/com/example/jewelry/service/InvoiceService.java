@@ -57,6 +57,6 @@ public class InvoiceService {
 
     private void saveStocksForInvoice(Invoice invoice) {
         log.info("Updating stocks for invoice: {}, items: {}", invoice.getInvoiceNumber(), invoice.getItems());
-        stocksService.saveStocks(invoice.getItems().stream().map(Invoice.Item::getDescription).toList());
+        stocksService.saveStocks(invoice.getItems().stream().map(Invoice.Item::getDescription).toList(), invoice.getItems().stream().map(Invoice.Item::getHsn).toList());
     }
 }

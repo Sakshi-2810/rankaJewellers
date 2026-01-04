@@ -28,12 +28,25 @@ public class StocksService {
         return new Response(newStocks, "Stock saved successfully");
     }
 
+    public void saveStocks(List<String> newStocks, List<String> hsnCodes) {
+        Stocks stock = stockRepository.findById(1L).orElse(new Stocks());
+        stock.setId(1L);
+        Set<String> stocksSet = stock.getItems() == null ? new HashSet<>() : stock.getItems();
+        Set<String> hsns = stock.getHsnCodes() == null ? new HashSet<>() : stock.getHsnCodes();
+        stocksSet.addAll(newStocks);
+        hsns.addAll(hsnCodes);
+        stock.setItems(stocksSet);
+        stock.setHsnCodes(hsns);
+        stockRepository.save(stock);
+        log.info("Stocks saved/updated successfully : {}", stock.getItems());
+        log.info("Hsn codes saved/updated successfully : {}", stock.getHsnCodes());
+    }
     public Response fetchAllStocks() {
-        Set<String> stocks = new HashSet<>();
+        Stocks stocks = new Stocks();
         if (stockRepository.existsById(1L)) {
-            stocks = stockRepository.findById(1L).get().getItems();
+            stocks = stockRepository.findById(1L).get();
+            log.info("Fetched stocks successfully : {}", stocks);
         }
-        log.info("Fetched stocks successfully : {}", stocks);
         return new Response(stocks, "Stocks fetched successfully");
     }
 }

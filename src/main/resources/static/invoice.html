@@ -7,6 +7,96 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
+    /* ===============================
+   ITEM ROW TYPOGRAPHY ENHANCEMENTS
+================================= */
+
+/* Base font refinement */
+table {
+    font-size: 12px;
+}
+
+/* Item description should stand out */
+td:nth-child(2) input {
+    font-size: 75%;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+/* HSN & Purity – compact and subtle */
+.item-hsn,
+.item-purity {
+    font-size: 75%;
+    text-align: center;
+    color: #555;
+}
+
+/* Quantity & Weight – numeric clarity */
+.item-qty,
+.weight {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Monetary values – aligned & readable */
+.m-val,
+.making-val,
+.row-total {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Metal dropdown refinement */
+.type-select {
+    font-size: 11px;
+    padding: 6px 8px;
+    text-align: center;
+}
+
+/* Row spacing for breathing room */
+tbody tr {
+    height: 44px;
+}
+
+/* ===============================
+   MOBILE OPTIMIZATION (ITEMS)
+================================= */
+@media screen and (max-width: 768px) {
+
+    table {
+        font-size: 11px;
+    }
+
+    /* Allow description to wrap */
+    td:nth-child(2) input {
+        white-space: normal;
+        line-height: 1.3;
+        font-size: 12px;
+    }
+
+    /* Tighten numeric fields */
+    .item-qty,
+    .weight {
+        font-size: 11px;
+        padding: 4px;
+    }
+
+    /* Reduce monetary column width visually */
+    .m-val,
+    .making-val,
+    .row-total {
+        font-size: 11px;
+    }
+
+    /* Hide purity text visually but keep data */
+    .item-purity {
+        opacity: 0.7;
+    }
+}
+
+
 :root { 
     --gold: #d4af37;
     --gold-dark: #b8962e;
@@ -121,7 +211,7 @@ body {
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
 .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--gold-primary); letter-spacing: 1px; margin-bottom: 4px; display: block; }
 
-input, textarea, select { width: 100%; border: 1px solid #edf2f7; padding: 8px; border-radius: 6px; font-size: 12px; }
+input, textarea, select { width: 100%; border: 1px solid #edf2f7; padding: 8px; border-radius: 6px; font-size: 75%; }
 input:required { border-left: 3px solid var(--gold-primary); }
 
 .live-rates { background: var(--gold-light); padding: 12px; border-radius: 8px; display: flex; gap: 15px; align-items: center; margin-bottom: 15px; border: 1px solid #e2d1b8; }
@@ -271,16 +361,98 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         background: rgba(0,0,0,0.04) !important;
         border: 1px dashed rgba(0,0,0,0.3);
     }
+
+        /* 1. Primary Styling for Item Detail Inputs */
+    input.item-qty, 
+    input.weight, 
+    input.item-purity,
+    input.item-hsn {
+        display: inline-block !important;
+        width: 100% !important;
+        /* text-align: center !important; */
+        font-size: 5% !important; /* Slightly increased for better digital readability */
+        color: var(--text-main) !important;
+        background-color: transparent;
+        border: 1px solid #edf2f7;
+        border-radius: 4px;
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
+        margin: 0;
+        transition: var(--transition);
+    }
+
+    /* 2. Remove "Spinners" (up/down arrows) so text stays perfectly centered */
+    input.item-qty::-webkit-outer-spin-button,
+    input.item-qty::-webkit-inner-spin-button,
+    input.weight::-webkit-outer-spin-button,
+    input.weight::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* 3. Focus State for better User Experience */
+    input.item-qty:focus, 
+    input.weight:focus, 
+    input.item-hsn:focus {
+        border-color: var(--gold-primary) !important;
+        background-color: #fffcf5 !important;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(176, 141, 87, 0.1);
+    }
+
+    input.item-qty, 
+    input.weight, 
+    input.item-purity,
+    input.item-hsn {
+        border: none !important;
+        font-size: 75% !important;
+        color: black !important;
+        background: transparent !important;
+    }
+
+
+    /* Remove any lingering browser padding that might push text out of view */
+    td input {
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    /* Ensure the table doesn't compress the columns too much */
+    table {
+        table-layout: fixed;
+        width: 100% !important;
+    }
+     #goldRate,
+    #silverRate {
+        border: 0 !important;
+        background: none !important;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 0;
+        margin: 0;
+        width: auto;
+        display: inline;
+        pointer-events: none;
+    }
+
+    /* Keep rates on same line, no height increase */
+    .rate-container {
+        display: inline;
+        white-space: nowrap;
+        margin: 0;
+        padding: 0;
+    }
+
+    #goldRate::placeholder,
+    #silverRate::placeholder {
+        display: none;
+    }
 }
 /* 1. Remove the up/down arrows (spinners) to free up horizontal space */
 .weight::-webkit-outer-spin-button,
 .weight::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
-
-.weight[type=number] {
-    -moz-appearance: textfield; /* Firefox fix */
 }
 
 /* 2. Reduce horizontal padding and ensure the font fits */
@@ -452,7 +624,7 @@ td:nth-child(5) {
                     <h1>Ranka Jewellers</h1>
                     <p>62 Lohiya Marg, Shujalpur Mandi (Near Rokadiya Hanuman Mandir), Shujalpur, MP </p>
                         <p> Ph: +91 9425035298, +91 9406864568</p>
-                    <p style="font-size: 10px; color: #999;">GSTIN: 23ABCDE1234F1Z5</p>
+                    <p style="font-size: 10px; color: #999;">GSTIN: 23AOGPR7500E1Z8</p>
                 </div>
                 <div class="inv-meta-bar">
                     <div>Date: <input type="date" id="invDate" required></div>
@@ -475,29 +647,46 @@ td:nth-child(5) {
                 </div>
             </div>
 
-            <div class="live-rates no-print">
+            <div class="live-rates">
                 <span class="section-label" style="margin:0">Market Rates (1g):</span>
-                Gold 24k: <input type="number" id="goldRate" value="0" oninput="calculate()" style="width:110px" required>
-                Silver: <input type="number" id="silverRate" value="0" oninput="calculate()" style="width:100px" required>
+                Gold 22k: ₹<input type="number" id="goldRate" placeholder="0" oninput="calculate()" style="width:110px" required>
+                Silver: ₹<input type="number" id="silverRate" placeholder="0" oninput="calculate()" style="width:100px" required>
             </div>
 
             <table>
+                <colgroup>
+                    <col style="width:2%">
+                    <col style="width:16%">
+                    <col style="width:12%">
+                    <col style="width:12%">
+                    <col style="width:6%">
+                    <col style="width:12%">
+                    <col style="width:10%">
+                    <col style="width:10%">
+                    <col style="width:7%">
+                    <col style="width:10%">
+                    <col style="width:2%">
+                </colgroup>
+
                 <thead>
                     <tr>
-                        <th width="5%">#</th>
-                        <th width="17%">Description</th>
+                        <th width="2%">#</th>
+                        <th width="16%">Description</th>
+                        <th width="12%">HSN</th>
                         <th width="12%">Metal</th>
-                        <th width="12%">Purity</th>
-                        <th width="10%">Weight (gms)</th>
-                        <th width="14%">Metal Value</th>
-                        <th width="12%">Making (12%)</th>
-                        <th width="14%">Total</th>
-                        <th width="4%" class="no-print"></th>
+                        <th width="10%">Purity</th>
+                        <th width="12%">Qty</th>
+                        <th width="10%">Gross Weight (gms)</th>
+                        <th width="10%">Net Weight (gms)</th>
+                        <th width="10%">Making</th>
+                        <th width="10%">Total</th>
+                        <th width="2%" class="no-print"></th>
                     </tr>
                 </thead>
                 <tbody id="itemBody"></tbody>
             </table>
             <datalist id="stockSuggestions"></datalist>
+            <datalist id="hsnSuggestions"></datalist>
 
             <div class="btn-group no-print">
                 <button type="button" class="btn btn-add" onclick="addRow()">+ Add New Item</button>
@@ -530,7 +719,7 @@ td:nth-child(5) {
                     
                     <div class="grand-total-row"><span>Grand Total:</span> <span id="grandTotal">₹0.00</span></div>
                     
-                    <div style="background: #f0fff4; padding: 8px; border-radius: 6px; margin-top: 5px;" class="no-print">
+                    <div style="background: #f0fff4; padding: 8px; border-radius: 6px; margin-top: 5px;">
                         <span>Cash Received:</span> 
                         <input type="number" id="cashReceived" value="0" oninput="calculate()" style="background: transparent; text-align: right; width: 100px; font-weight: bold; border:none; border-bottom: 1px solid #27ae60;">
                     </div>
@@ -546,6 +735,7 @@ td:nth-child(5) {
                     </div>
                 </div>
             </div>
+
         </div>
     </form>
 </main>
@@ -571,7 +761,6 @@ function initNewInvoice() {
         if (parseFloat(storedRates.gold) > 0) document.getElementById('goldRate').value = storedRates.gold;
         if (parseFloat(storedRates.silver) > 0) document.getElementById('silverRate').value = storedRates.silver;
     }
-    addRow(); 
 }
 
 function populateInvoiceFields(inv) {
@@ -611,41 +800,59 @@ function updateRowIndices() {
 }
 
 function addRow(itemData = null) {
+    const existingRows = document.querySelectorAll('#itemBody tr'); 
+    let previousHsn = '';
+
+    if (existingRows.length > 0) {
+        const lastRow = existingRows[existingRows.length - 1];
+        const hsnInput = lastRow.querySelector('.item-hsn');
+        if (hsnInput) {
+            previousHsn = hsnInput.value;
+        }
+    }
+
+    // Priority: itemData.hsn > previousHsn > empty string
+    const hsnToUse = (itemData && itemData.hsn) ? itemData.hsn : previousHsn;
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
         <td style="font-weight: 600; color: var(--gold-primary); text-align: center;"><span class="row-index"></span></td>
         <td><input type="text" value="${itemData ? itemData.description : ''}" placeholder="Item" list="stockSuggestions" required></td>
+        <td><input type="text" class="item-hsn" value="${hsnToUse}" placeholder="HSN" list="hsnSuggestions"></td>
         <td>
             <select class="type type-select ${itemData && itemData.metal === 'silver' ? 'silver-theme' : 'gold-theme'}" onchange="updateTheme(this); calculate()">
                 <option value="gold" ${itemData && itemData.metal === 'gold' ? 'selected' : ''}>GOLD</option>
                 <option value="silver" ${itemData && itemData.metal === 'silver' ? 'selected' : ''}>SILVER</option>
             </select>
         </td>
-        <td>
-            <select class="purity" onchange="calculate()" style="visibility: ${itemData && itemData.metal === 'silver' ? 'hidden' : 'visible'}">
-                <option value="1" ${itemData && itemData.purity === 1 ? 'selected' : ''}>24k</option>
-                <option value="0.916" ${itemData ? (itemData.purity === 0.916 ? 'selected' : '') : 'selected'}>22k</option>
-                <option value="0.75" ${itemData && itemData.purity === 0.75 ? 'selected' : ''}>18k</option>
-            </select>
-        </td>
-        <td><input type="number" required class="weight" value="${itemData ? itemData.weight : ''}" placeholder="0.000" step="0.001" oninput="calculate()"></td>
-        <td>₹<span class="m-val">${itemData ? itemData.metalValue.toFixed(2) : '0.00'}</span></td>
-        <td>₹<span class="making-val">${itemData ? itemData.makingCharge.toFixed(2) : '0.00'}</span></td>
+        <td><input type="text" class="item-purity" value="${itemData ? itemData.purity : "22K"}" readonly></td>
+        <td><input type="number" class="item-qty" value="${itemData ? itemData.qty : '1'}" oninput="calculate()"></td>
+        <td><input type="number" required class="weight gWeight" value="${itemData ? itemData.gWeight : ''}" placeholder="0.000" step="0.001"></td>
+        <td><input type="number" required class="weight nWeight" value="${itemData ? itemData.weight : ''}" placeholder="0.000" step="0.001" oninput="calculate()"></td>
+        <td><span class="making-val">${itemData ? itemData.makingCharge.toFixed(2) : '12'}</span>%</td>
         <td>₹<span class="row-total">${itemData ? itemData.total.toFixed(2) : '0.00'}</span></td>
         <td class="no-print"><button type="button" onclick="this.parentElement.parentElement.remove(); updateRowIndices(); calculate();" style="color:#e74c3c; background:none; border:none; cursor:pointer; font-weight:bold;">✕</button></td>
     `;
     document.getElementById('itemBody').appendChild(tr);
-    updateRowIndices(); // Re-index after adding
+    updateRowIndices();
+    const typeSelect = tr.querySelector('.type-select');
+    updateTheme(typeSelect);
+    if(itemData) calculate();
 }
 
 function updateTheme(selectEl) {
-    const puritySelect = selectEl.closest('tr').querySelector('.purity');
+    const row = selectEl.closest('tr');
+    const purityInput = row.querySelector('.item-purity');
+    const makingVal = row.querySelector('.making-val');
+
     if (selectEl.value === 'silver') {
         selectEl.className = 'type type-select silver-theme';
-        puritySelect.style.visibility = 'hidden';
+        purityInput.style.visibility = 'hidden';
+        makingVal.innerText = '0';
     } else {
         selectEl.className = 'type type-select gold-theme';
-        puritySelect.style.visibility = 'visible';
+        purityInput.style.visibility = 'visible';
+        makingVal.innerText = '12';
     }
 }
 
@@ -656,14 +863,16 @@ function calculate() {
 
     document.querySelectorAll('#itemBody tr').forEach(row => {
         const type = row.querySelector('.type').value;
-        const weight = parseFloat(row.querySelector('.weight').value) || 0;
-        const purity = parseFloat(row.querySelector('.purity').value);
-        let rate = (type === 'gold') ? gRate * purity : sRate;
-        const metalVal = weight * rate;
-        const makingCharge = metalVal * 0.12;
-        const rowTotal = metalVal + makingCharge;
-        row.querySelector('.m-val').innerText = metalVal.toFixed(2);
-        row.querySelector('.making-val').innerText = makingCharge.toFixed(2);
+        const weight = parseFloat(row.querySelector('.nWeight').value) || 0;
+        const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+
+        let rate = (type === 'gold') ? gRate : sRate;
+
+        const makingPercent = (type === 'gold') ? 0.12 : 0;
+        const makingCharge = (weight * qty) * rate * makingPercent;
+
+        const rowTotal = (weight * qty) * rate + makingCharge;
+        row.querySelector('.making-val').innerText = (type === 'gold') ? 12 : 0;
         row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
         totalTaxable += rowTotal;
     });
@@ -712,12 +921,22 @@ async function loadStockSuggestions() {
         const response = await fetch('/stocks');
         const result = await response.json();
         const stocks = result.data || result; 
+
         const datalist = document.getElementById('stockSuggestions');
         datalist.innerHTML = '';
-        stocks.forEach(stock => {
+        const hsnList = document.getElementById('hsnSuggestions');
+        hsnList.innerHTML='';
+        
+        stocks.items.forEach(stock => {
             const option = document.createElement('option');
             option.value = stock;
             datalist.appendChild(option);
+        });
+        
+         stocks.hsnCodes.forEach(hsnCode => {            
+            const hsnOption = document.createElement('option');
+            hsnOption.value = hsnCode;
+            hsnList.appendChild(hsnOption);
         });
     } catch (e) {}
 }
@@ -743,10 +962,12 @@ async function saveInvoice() {
         rates: { gold: parseFloat(gold), silver: parseFloat(silver) },
         items: Array.from(document.querySelectorAll('#itemBody tr')).map(row => ({
             description: row.querySelector('td input').value,
+            hsn: row.querySelector('.item-hsn').value,
             metal: row.querySelector('.type').value,
-            purity: parseFloat(row.querySelector('.purity').value),
-            weight: parseFloat(row.querySelector('.weight').value),
-            metalValue: parseFloat(row.querySelector('.m-val').innerText),
+            qty: parseFloat(row.querySelector('.item-qty').value),
+            purity: row.querySelector('.item-purity').value,
+            weight: parseFloat(row.querySelector('.nWeight').value),
+            gWeight: parseFloat(row.querySelector('.gWeight').value),
             makingCharge: parseFloat(row.querySelector('.making-val').innerText),
             total: parseFloat(row.querySelector('.row-total').innerText)
         })),
