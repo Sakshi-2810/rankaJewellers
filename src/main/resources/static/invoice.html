@@ -204,14 +204,50 @@ body {
     border: 1px solid rgba(176, 141, 87, 0.2);
     overflow: visible;
 }
-
-.row-header { text-align: center; border-bottom: 2px solid var(--gold-light); padding-bottom: 15px; margin-bottom: 15px; }
+.shop-info { 
+    flex-grow: 1;
+    text-align: center;
+    margin-left: 20px;
+}
+.row-header { 
+    display: flex; 
+    align-items: center; /* Align to top */
+    justify-content: flex-start; /* This pushes elements to the edges */
+    border-bottom: 2px solid var(--gold-light); 
+    padding-bottom: 15px; 
+    margin-bottom: 15px; 
+}
 .shop-info h1 { font-family: 'Great Vibes', cursive; margin: 0; color: var(--gold-primary); font-size: 54px; font-weight: 400; }
 .shop-info p { font-size: 11px; color: #636e72; margin: 2px 0; text-transform: uppercase; letter-spacing: 1px;}
 
-.inv-meta-bar { display: flex; justify-content: space-between; margin-top: 10px; font-family: 'Dancing Script', cursive; font-size: 20px; color: var(--gold-primary); border-top: 1px solid var(--gold-light); padding-top: 10px; }
-.inv-meta-bar input { border: none; font-weight: bold; background: transparent; width: 140px; font-size: 14px; font-family: 'Poppins'; }
+.inv-meta-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    margin-top: 10px; 
+    padding: 8px 10px;
+    font-family: 'Dancing Script', cursive; 
+    font-size: 14px; 
+    color: var(--gold-primary); 
+    /* The line at the end */
+    border-bottom: 1.5px solid var(--gold-light); 
+    margin-bottom: 15px;
+}
+.inv-meta-bar div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.inv-meta-bar input { 
+    border: none; 
+    font-weight: bold; 
+    background: transparent; 
+    width: 140px; 
+    font-size: 10px; 
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+}
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
 .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--gold-primary); letter-spacing: 1px; margin-bottom: 4px; display: block; }
 
@@ -319,10 +355,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
     .shop-info h1 {
         font-size: 38px !important;
     }
-
-    /* ======================================
-       TABLE OPTIMIZATION FOR 10 ROWS / PAGE
-       ====================================== */
 
     table {
         table-layout: fixed !important;
@@ -584,6 +616,9 @@ td:nth-child(5) {
     border: 1px solid var(--gold-light);
     border-radius: 8px;
     background: #fffdf9;
+    display: flex; /* Added flex */
+    align-items: center;
+    gap: 20px; /* Space between QR and Text */
 }
 
 .bank-details-box span {
@@ -600,6 +635,36 @@ td:nth-child(5) {
     font-size: 10px;
     letter-spacing: 1px;
     margin-bottom: 5px;
+    display: block;
+}
+/* Left side text */
+.bank-left span {
+    display: block;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* QR Right Side */
+.bank-qr {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.bank-qr img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 4px;
+    background: white;
+}
+
+.qr-text {
+    font-size: 9px;
+    color: #777;
+    margin-top: 3px;
     display: block;
 }
 </style>
@@ -636,18 +701,21 @@ td:nth-child(5) {
     <form id="invoiceForm" onsubmit="return false;">
         <div class="invoice-box">
             <div class="row-header">
+                <div class="logo-box" style="flex-shrink: 0;">
+                    <img src="logo.jpg" alt="Company Logo" style="height: 80px;">
+                </div>
                 <div class="shop-info">
                     <h1>Ranka Jewellers</h1>
                     <p>62 Lohiya Marg, Shujalpur Mandi (Near Rokadiya Hanuman Mandir), Shujalpur, MP </p>
                         <p> Ph: +91 9425035298, +91 9406864568</p>
                     <p style="font-size: 10px; color: #999;">GSTIN: 23AOGPR7500E1Z8</p>
                 </div>
-                <div class="inv-meta-bar">
+                
+            </div>
+            <div class="inv-meta-bar">
                     <div>Date: <input type="date" id="invDate" required></div>
                     <div>Invoice No: <input type="text" id="invNum" readonly></div>
                 </div>
-            </div>
-
             <div class="info-grid">
                 <div>
                     <span class="section-label">Customer Name*</span>
@@ -706,7 +774,7 @@ td:nth-child(5) {
 
             <div class="btn-group no-print">
                 <button type="button" class="btn btn-add" onclick="addRow()">+ Add New Item</button>
-                <button type="button" class="btn btn-save" onclick="saveInvoice()">Save to Vault</button>
+                <button type="button" class="btn btn-save" onclick="saveInvoice()">Save & Print</button>
                 <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button>
             </div>
 
@@ -722,11 +790,18 @@ td:nth-child(5) {
                         Total: <span id="totalInWords">Zero Rupees Only</span>
                     </div>
                     <div class="bank-details-box">
-                        <span class="bank-details-title">Bank Details:</span>
-                        <span><strong>Bank:</strong> Bank of India</span>
-                        <span><strong>A/c Name:</strong> Ranka Jewellers</span>
-                        <span><strong>A/c No:</strong> 955420110000385</span>
-                        <span><strong>IFSC:</strong> BKID0009554</span>
+                         <div class="bank-qr">
+                            <img src="phonePay.jpg" alt="PhonePe QR">
+                            <span class="qr-text">Scan & Pay</span>
+                        </div>
+                        <div class="bank-left">
+                            <span class="bank-details-title">Bank Details:</span>
+                            <span><strong>Bank:</strong> Bank of India</span>
+                            <span><strong>A/c Name:</strong> Ranka Jewellers</span>
+                            <span><strong>A/c No:</strong> 955420110000385</span>
+                            <span><strong>IFSC:</strong> BKID0009554</span>
+                        </div>
+                        
                     </div>
                     
                     <div class="signature-box" style="text-align: left;">
@@ -1022,6 +1097,7 @@ async function saveInvoice() {
         if(res.ok) {
             sessionStorage.setItem('lastUsedRates', JSON.stringify({ gold, silver }));
             alert('Invoice saved successfully!');
+            window.print();
         } else { alert('Failed to save.'); }
     } catch (e) { alert('Server Error.'); } finally { hideLoader(); }
 }

@@ -39,9 +39,13 @@ public class InvoiceService {
     }
 
     public Response getInvoiceCount() {
-        long count = invoiceRepository.count();
-        log.info("Total invoice count: {}", count);
-        return new Response(count, "Total invoice count fetched successfully");
+        try {
+            String count = invoiceRepository.findTopByOrderByInvoiceNumberDesc().getInvoiceNumber().split("/")[2];
+            log.info("Total invoice count: {}", count);
+            return new Response(count, "Total invoice count fetched successfully");
+        } catch (Exception e) {
+            return new Response(0, "Total invoice count fetched successfully");
+        }
     }
 
     public Response editInvoice(Invoice invoice) {
@@ -58,5 +62,14 @@ public class InvoiceService {
     private void saveStocksForInvoice(Invoice invoice) {
         log.info("Updating stocks for invoice: {}, items: {}", invoice.getInvoiceNumber(), invoice.getItems());
         stocksService.saveStocks(invoice.getItems().stream().map(Invoice.Item::getDescription).toList(), invoice.getItems().stream().map(Invoice.Item::getHsn).toList());
+    }
+
+    public void deleteInvoice(String invoiceNumber) {
+        if (invoiceRepository.existsById(invoiceNumber)) {
+            invoiceRepository.deleteById(invoiceNumber);
+            log.info("Deleted invoice with id : {}", invoiceNumber);
+        } else {
+            log.info("Invoice : {} do not exist", invoiceNumber);
+        }
     }
 }

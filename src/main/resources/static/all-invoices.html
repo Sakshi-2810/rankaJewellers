@@ -333,6 +333,30 @@
         font-size: 0.65rem;
     }
 }
+.btn-delete {
+    color: #e74c3c;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    margin-left: 15px;
+    padding: 0;
+    transition: var(--transition);
+}
+
+.btn-delete:hover {
+    color: #c0392b;
+    text-decoration: underline;
+}
+
+/* Optional: spacing between the two actions */
+.action-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
     </style>
 </head>
 
@@ -415,7 +439,14 @@
                             <td>${inv.customer.name}</td>
                             <td style="font-weight:600;color:var(--gold)">₹${inv.summary.grandTotal.toLocaleString('en-IN')}</td>
                             <td><span class="status-badge ${bal<=0?'paid':'due'}">${bal<=0?'PAID':'₹'+bal+' DUE'}</span></td>
-                            <td><a class="btn-view" onclick='viewInvoice(${JSON.stringify(inv)})'>View / Edit</a></td>
+                            <td>
+                                <div class="action-cell">
+                                    <a class="btn-view" onclick='viewInvoice(${JSON.stringify(inv)})'>View / Edit</a>
+                                    <button class="btn-delete" onclick="deleteInvoice('${inv.invoiceNumber}')">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
                         </tr>`
                 })
             }
@@ -423,7 +454,32 @@
             body.innerHTML='<tr><td colspan="6" style="text-align:center;color:red;padding:40px;">Error loading data</td></tr>'
         }finally{setTimeout(hideLoader,500)}
     }
+async function deleteInvoice(id) {
+    // 1. Confirm deletion
+    if (!confirm('Are you sure you want to permanently delete this invoice?')) return;
 
+    showLoader();
+    try {
+        // 2. Execute DELETE request
+        const res = await fetch(`/invoice?id=${id}`, {
+            method: 'DELETE'
+        });
+
+        if (res.ok) {
+            // 3. Handle success
+            alert('Invoice deleted successfully.');
+            loadInvoices(); 
+        } else {
+            const errorData = await res.json();
+            alert('Error: ' + (errorData.message || 'Could not delete invoice.'));
+        }
+    } catch (err) {
+        console.error('Delete failed:', err);
+        alert('Server error. Please try again later.');
+    } finally {
+        setTimeout(hideLoader, 500);
+    }
+}
     function viewInvoice(inv){
         sessionStorage.setItem('editInvoiceData',JSON.stringify(inv))
         location.href='invoice.html'
