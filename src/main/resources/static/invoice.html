@@ -15,7 +15,10 @@
 table {
     font-size: 12px;
 }
-
+td:nth-child(9) {
+    white-space: nowrap !important;
+    text-align: center;
+}
 /* Item description should stand out */
 td:nth-child(2) input {
     font-size: 75%;
@@ -193,12 +196,13 @@ body {
         }
 
 /* --- MAIN CONTENT --- */
-.main-content { flex-grow: 1; overflow-y: auto; padding: 40px; }
+.main-content { flex-grow: 1; overflow-y: auto; padding: 20px; display: block; }
 .invoice-box { 
-    max-width: 950px; margin: auto; padding: 40px; 
+    max-width: 950px; margin: 20px auto; padding: 40px; 
     background: #fff; border-radius: 12px; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     border: 1px solid rgba(176, 141, 87, 0.2);
+    overflow: visible;
 }
 
 .row-header { text-align: center; border-bottom: 2px solid var(--gold-light); padding-bottom: 15px; margin-bottom: 15px; }
@@ -253,201 +257,179 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
-    html, body {
-        overflow: hidden !important;
-    }
 
-    .main-content,
-    .invoice-box {
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: auto !important;
         overflow: visible !important;
     }
 
-    body {
-        background: white !important;
-        margin: 0;
-        padding: 0;
-    }
-
+    /* Remove sidebar + buttons */
     .sidebar, .no-print, .btn-group {
         display: none !important;
     }
 
     .main-content {
-        padding: 0;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
+    /* Reduce A4 page inner padding to fit more rows */
     .invoice-box {
+        padding: 12mm !important;      /* previously ~15mm → now tighter */
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+        min-height: auto !important;
         position: relative;
-        z-index: 1;
-        padding: 1.5cm;
-        width: 100%;
-        min-height: 29.7cm;
-        background: transparent !important;
-        box-shadow: none;
-        border: none;
     }
 
-    /* 🖋️ ELEGANT LINE ART BACKGROUND */
+    /* Light design background */
     .invoice-box::before {
         content: "";
         position: absolute;
         inset: 0;
-        z-index: -1;
         pointer-events: none;
-
+        z-index: -1;
         background:
-            /* Diamond lattice */
             repeating-linear-gradient(
                 45deg,
-                rgba(0,0,0,0.025) 0,
-                rgba(0,0,0,0.025) 1px,
+                rgba(0,0,0,0.02) 0,
+                rgba(0,0,0,0.02) 1px,
                 transparent 1px,
-                transparent 12px
+                transparent 10px
             ),
             repeating-linear-gradient(
                 -45deg,
-                rgba(0,0,0,0.025) 0,
-                rgba(0,0,0,0.025) 1px,
+                rgba(0,0,0,0.02) 0,
+                rgba(0,0,0,0.02) 1px,
                 transparent 1px,
-                transparent 12px
+                transparent 10px
             ),
-            /* Soft paper texture */
-            linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+            linear-gradient(180deg, #fff 0%, #fafafa 100%);
     }
 
-    /* ⛓️ DOUBLE ORNAMENT BORDER */
-    .invoice-box::after {
-        content: "";
-        position: absolute;
-        top: 10mm;
-        left: 10mm;
-        right: 10mm;
-        bottom: 10mm;
-        pointer-events: none;
-
-        border: 1.2px solid rgba(0,0,0,0.45);
-        outline: 0.8px solid rgba(0,0,0,0.25);
-        outline-offset: -8px;
-        border-radius: 6px;
+    /* Reduce header spacing */
+    .row-header {
+        margin-bottom: 8px !important;
+        padding-bottom: 6px !important;
     }
 
-    /* 🌿 CORNER DECORATION FEEL */
-    .invoice-box::marker {
-        display: none;
+    .shop-info h1 {
+        font-size: 38px !important;
     }
 
-    /* 🪙 WATERMARK (TEXT SAFE) */
-    .invoice-watermark {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 72px;
-        letter-spacing: 8px;
-        font-family: "Playfair Display", serif;
-        color: rgba(0,0,0,0.04);
-        z-index: -1;
-        white-space: nowrap;
+    /* ======================================
+       TABLE OPTIMIZATION FOR 10 ROWS / PAGE
+       ====================================== */
+
+    table {
+        table-layout: fixed !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 10px !important; /* Reduced */
     }
 
-    input, select, textarea {
-        border: none !important;
+    th {
+        padding: 4px !important;        /* Was 10px */
+        font-size: 9px !important;      /* Was 10px */
+    }
+
+    td {
+        padding: 4px 6px !important;    /* Was 8px 10px */
+        font-size: 10px !important;
+        height: 24px !important;        /* CRITICAL: smaller row height */
+        line-height: 1.2 !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    tbody tr {
+        height: 24px !important;        /* Forces compact print height */
+        page-break-inside: avoid !important;
+    }
+
+    /* Reduce input size inside cells */
+    td input,
+    td select {
+        font-size: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 18px !important;
         background: transparent !important;
-        color: black !important;
-        appearance: none;
+        border: none !important;
+    }
+
+    /* Numeric fields remain readable */
+    input.item-qty,
+    input.weight,
+    input.item-hsn,
+    input.item-purity {
+        text-align: center !important;
+    }
+
+    /* Summary spacing tighten */
+    .footer-section {
+        margin-top: 10px !important;
+        gap: 20px !important;
     }
 
     .amount-words {
-        background: rgba(0,0,0,0.04) !important;
-        border: 1px dashed rgba(0,0,0,0.3);
+        font-size: 14px !important;
+        padding: 8px !important;
     }
 
-        /* 1. Primary Styling for Item Detail Inputs */
-    input.item-qty, 
-    input.weight, 
-    input.item-purity,
-    input.item-hsn {
-        display: inline-block !important;
-        width: 100% !important;
-        /* text-align: center !important; */
-        font-size: 5% !important; /* Slightly increased for better digital readability */
-        color: var(--text-main) !important;
-        background-color: transparent;
-        border: 1px solid #edf2f7;
-        border-radius: 4px;
-        -webkit-appearance: none;
-        -moz-appearance: textfield;
-        margin: 0;
-        transition: var(--transition);
+    .signature-box {
+        margin-top: 25px !important;
     }
 
-    /* 2. Remove "Spinners" (up/down arrows) so text stays perfectly centered */
-    input.item-qty::-webkit-outer-spin-button,
-    input.item-qty::-webkit-inner-spin-button,
-    input.weight::-webkit-outer-spin-button,
-    input.weight::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    .invoice-watermark {
+        font-size: 60px !important;
+    }
+    /* Entire rate bar shrinks */
+    .live-rates {
+        padding: 4px 6px !important;     /* Was ~12px */
+        margin: 4px 0 8px 0 !important;  /* Reduce vertical space */
+        border: 1px solid #ddd !important;
+        background: #fff !important;
+        border-radius: 4px !important;
+        font-size: 9px !important;
+        gap: 6px !important;
+        align-items: center !important;
+        line-height: 1.1 !important;
     }
 
-    /* 3. Focus State for better User Experience */
-    input.item-qty:focus, 
-    input.weight:focus, 
-    input.item-hsn:focus {
-        border-color: var(--gold-primary) !important;
-        background-color: #fffcf5 !important;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(176, 141, 87, 0.1);
-    }
-
-    input.item-qty, 
-    input.weight, 
-    input.item-purity,
-    input.item-hsn {
-        border: none !important;
-        font-size: 75% !important;
-        color: black !important;
-        background: transparent !important;
-    }
-
-
-    /* Remove any lingering browser padding that might push text out of view */
-    td input {
+    /* Ensure items stay on single line */
+    .live-rates > div,
+    .live-rates span,
+    .live-rates input {
+        font-size: 9px !important;
+        margin: 0 !important;
         padding: 0 !important;
-        height: auto !important;
+        white-space: nowrap !important;
     }
 
-    /* Ensure the table doesn't compress the columns too much */
-    table {
-        table-layout: fixed;
-        width: 100% !important;
+    /* Make rate input boxes tiny but readable */
+    .live-rates input {
+        width: 50px !important;
+        height: 16px !important;
+        border: 1px solid #ccc !important;
+        text-align: center !important;
+        background: white !important;
+        padding: 0 !important;
+        font-size: 9px !important;
     }
-     #goldRate,
-    #silverRate {
-        border: 0 !important;
+
+    /* Remove gold/silver theme color blocks in print */
+    .gold-theme,
+    .silver-theme {
         background: none !important;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 0;
-        margin: 0;
-        width: auto;
-        display: inline;
-        pointer-events: none;
-    }
-
-    /* Keep rates on same line, no height increase */
-    .rate-container {
-        display: inline;
-        white-space: nowrap;
-        margin: 0;
-        padding: 0;
-    }
-
-    #goldRate::placeholder,
-    #silverRate::placeholder {
-        display: none;
+        color: #000 !important;
+        border: none !important;
+        font-weight: 500 !important;
     }
 }
+
 /* 1. Remove the up/down arrows (spinners) to free up horizontal space */
 .weight::-webkit-outer-spin-button,
 .weight::-webkit-inner-spin-button {
@@ -586,6 +568,40 @@ td:nth-child(5) {
         width: 100%;
     }
 }
+/* Styling for Making Charge Input */
+.making-val-input {
+    display: inline-block !important;
+    width: 35px !important; /* Fixed width to ensure % fits beside it */
+    border: 1px solid #edf2f7;
+    padding: 2px;
+    text-align: right;
+}
+
+/* Bank Details Box */
+.bank-details-box {
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid var(--gold-light);
+    border-radius: 8px;
+    background: #fffdf9;
+}
+
+.bank-details-box span {
+    display: block;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.bank-details-title {
+    font-weight: 600;
+    color: var(--gold-primary);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    display: block;
+}
 </style>
 </head>
 <body>
@@ -705,6 +721,13 @@ td:nth-child(5) {
                     <div class="amount-words">
                         Total: <span id="totalInWords">Zero Rupees Only</span>
                     </div>
+                    <div class="bank-details-box">
+                        <span class="bank-details-title">Bank Details:</span>
+                        <span><strong>Bank:</strong> Bank of India</span>
+                        <span><strong>A/c Name:</strong> Ranka Jewellers</span>
+                        <span><strong>A/c No:</strong> 955420110000385</span>
+                        <span><strong>IFSC:</strong> BKID0009554</span>
+                    </div>
                     
                     <div class="signature-box" style="text-align: left;">
                         <span class="signature-line"></span>
@@ -820,7 +843,7 @@ function addRow(itemData = null) {
         <td><input type="text" value="${itemData ? itemData.description : ''}" placeholder="Item" list="stockSuggestions" required></td>
         <td><input type="text" class="item-hsn" value="${hsnToUse}" placeholder="HSN" list="hsnSuggestions"></td>
         <td>
-            <select class="type type-select ${itemData && itemData.metal === 'silver' ? 'silver-theme' : 'gold-theme'}" onchange="updateTheme(this); calculate()">
+            <select class="type type-select ${itemData && itemData.metal === 'silver' ? 'silver-theme' : 'gold-theme'}" onchange="updateTheme(this,true); calculate()">
                 <option value="gold" ${itemData && itemData.metal === 'gold' ? 'selected' : ''}>GOLD</option>
                 <option value="silver" ${itemData && itemData.metal === 'silver' ? 'selected' : ''}>SILVER</option>
             </select>
@@ -829,7 +852,7 @@ function addRow(itemData = null) {
         <td><input type="number" class="item-qty" value="${itemData ? itemData.qty : '1'}" oninput="calculate()"></td>
         <td><input type="number" required class="weight gWeight" value="${itemData ? itemData.gWeight : ''}" placeholder="0.000" step="0.001" oninput="syncNetWeight(this)"></td>
         <td><input type="number" required class="weight nWeight" value="${itemData ? itemData.weight : ''}" placeholder="0.000" step="0.001" oninput="calculate()"></td>
-        <td><span class="making-val">${itemData ? itemData.makingCharge.toFixed(2) : '12'}</span>%</td>
+        <td><input type="number" class="making-val-input making-val" value="${itemData ? itemData.makingCharge : '12'}" oninput="calculate()">%</td>
         <td>₹<span class="row-total">${itemData ? itemData.total.toFixed(2) : '0.00'}</span></td>
         <td class="no-print"><button type="button" onclick="this.parentElement.parentElement.remove(); updateRowIndices(); calculate();" style="color:#e74c3c; background:none; border:none; cursor:pointer; font-weight:bold;">✕</button></td>
     `;
@@ -846,23 +869,23 @@ function syncNetWeight(grossInput) {
     netInput.value = grossInput.value;
     calculate();
 }
-
-function updateTheme(selectEl) {
+function updateTheme(selectEl, isManual = false) {
     const row = selectEl.closest('tr');
     const purityInput = row.querySelector('.item-purity');
-    const makingVal = row.querySelector('.making-val');
+    const makingInput = row.querySelector('.making-val'); 
 
     if (selectEl.value === 'silver') {
         selectEl.className = 'type type-select silver-theme';
         purityInput.style.visibility = 'hidden';
-        makingVal.innerText = '0';
+        // Only reset to 0 if the user manually changed the dropdown
+        if (isManual) makingInput.value = '0'; 
     } else {
         selectEl.className = 'type type-select gold-theme';
         purityInput.style.visibility = 'visible';
-        makingVal.innerText = '12';
+        // Only reset to 12 if the user manually changed the dropdown
+        if (isManual) makingInput.value = '12'; 
     }
 }
-
 function calculate() {
     const gRate = parseFloat(document.getElementById('goldRate').value) || 0;
     const sRate = parseFloat(document.getElementById('silverRate').value) || 0;
@@ -875,7 +898,7 @@ function calculate() {
 
         let rate = (type === 'gold') ? gRate : sRate;
 
-        const makingPercent = (type === 'gold') ? 0.12 : 0;
+        const makingPercent = (parseFloat(row.querySelector('.making-val').value) || 0) / 100; 
         const makingCharge = (weight * qty) * rate * makingPercent;
 
         const rowTotal = (weight * qty) * rate + makingCharge;
@@ -975,7 +998,7 @@ async function saveInvoice() {
             purity: row.querySelector('.item-purity').value,
             weight: parseFloat(row.querySelector('.nWeight').value),
             gWeight: parseFloat(row.querySelector('.gWeight').value),
-            makingCharge: parseFloat(row.querySelector('.making-val').innerText),
+            makingCharge: parseFloat(row.querySelector('.making-val').value),
             total: parseFloat(row.querySelector('.row-total').innerText)
         })),
         summary: {
