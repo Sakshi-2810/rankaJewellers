@@ -42,7 +42,7 @@ public class InvoiceService {
         try {
             String count = invoiceRepository.findTopByOrderByInvoiceNumberDesc().getInvoiceNumber().split("/")[2];
             log.info("Total invoice count: {}", count);
-            return new Response(count, "Total invoice count fetched successfully");
+            return new Response(Integer.parseInt(count), "Total invoice count fetched successfully");
         } catch (Exception e) {
             return new Response(0, "Total invoice count fetched successfully");
         }

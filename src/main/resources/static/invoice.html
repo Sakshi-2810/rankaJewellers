@@ -287,90 +287,169 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
     margin: 0; 
 }
 
-@media print {
-
+@media print { 
+    @page {
+        size: A4;
+        margin: 0 !important ; 
+    }
+    /* Force background printing for textures */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        margin-left: 10px;
+        margin-right: 10px;
     }
+    body {
+        background-color: #ffffff !important;
 
+        /* Subtle diamond lattice */
+        background-image:
+            linear-gradient(135deg, rgba(0,0,0,0.08) 1px, transparent 1px),
+            linear-gradient(225deg, rgba(0,0,0,0.08) 1px, transparent 1px);
+        
+        background-size: 10px 10px !important;
+        background-repeat: repeat !important;
+    }
     html, body {
-        margin: 0;
-        padding: 0;
-        height: auto !important;
-        overflow: visible !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    }
+    .footer-section {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: transparent !important;
+        page-break-inside: avoid !important;
+    }
+    .main-content {
+        flex: 1 0 auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+    #custAddress {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 10px !important;
+        color: #000 !important;
+        resize: none !important;        /* Removes the resize handle icon */
+        overflow: hidden !important;    /* Prevents scrollbars from appearing */
+        width: 100% !important;
+        height: auto !important;        /* Allows it to fit the content */
+        display: block !important;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .info-grid .section-label {
+        margin-bottom: 2px !important;
+    }
+    .type-select {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #000 !important;
+        text-align: center !important;
+        width: 100% !important;
+        text-transform: uppercase;
     }
 
-    /* Remove sidebar + buttons */
-    .sidebar, .no-print, .btn-group {
+    /* Hide the dropdown arrow in IE/Edge */
+    .type-select::-ms-expand {
         display: none !important;
     }
 
-    .main-content {
-        padding: 0 !important;
-        margin: 0 !important;
+    /* Hide UI Elements */
+    .sidebar, .no-print, .btn-group, #globalLoader, .nav-menu {
+        display: none !important;
+    }
+    .inv-meta-bar {
+        margin: 0 0 8px 0 !important;   /* Tighten gap between header and customer info */
+        padding: 2px 0 !important;      /* Minimal vertical padding */
+        font-size: 10px !important;     /* Shrink the cursive font size */
+        border-bottom: 1px solid #eee !important;
+        display: flex !important;
+        justify-content: space-between !important;
     }
 
-    /* Reduce A4 page inner padding to fit more rows */
-    .invoice-box {
-        padding: 12mm !important;      /* previously ~15mm → now tighter */
-        border: none !important;
-        box-shadow: none !important;
-        background: white !important;
-        min-height: auto !important;
-        position: relative;
+    .inv-meta-bar div {
+        gap: 4px !important;            /* Bring labels and values closer */
     }
 
-    /* Light design background */
-    .invoice-box::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: -1;
-        background:
-            repeating-linear-gradient(
-                45deg,
-                rgba(0,0,0,0.02) 0,
-                rgba(0,0,0,0.02) 1px,
-                transparent 1px,
-                transparent 10px
-            ),
-            repeating-linear-gradient(
-                -45deg,
-                rgba(0,0,0,0.02) 0,
-                rgba(0,0,0,0.02) 1px,
-                transparent 1px,
-                transparent 10px
-            ),
-            linear-gradient(180deg, #fff 0%, #fafafa 100%);
+    .inv-meta-bar input {
+        font-size: 10px !important;     /* Ensure input text matches */
+        width: auto !important;         /* Let it collapse to the text width */
+        min-width: 80px !important;
+        font-weight: 600 !important;
+        text-align: right !important;
+    }
+    
+    /* Ensure the Info Grid (Customer Details) also sits closer to the bar */
+    .info-grid {
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        /* gap: 10px !important; */
     }
 
-    /* Reduce header spacing */
-    .row-header {
+    
+     .row-header {
         margin-bottom: 8px !important;
         padding-bottom: 6px !important;
     }
 
-    .shop-info h1 {
-        font-size: 38px !important;
+    .invoice-box {
+    flex: 1 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+
+    /* CRITICAL: allow full natural height */
+    height: auto !important;
+}
+
+    /* Pushes everything below it (the footer) to the bottom */
+    .items-table-wrapper {
+        flex: 0 0 auto !important; 
+        overflow: visible; /* Prevents table from creating its own scrollbar */
+        margin-bottom: 10px;
+        page-break-inside: avoid !important;
     }
 
     table {
         table-layout: fixed !important;
         width: 100% !important;
         border-collapse: collapse !important;
-        font-size: 10px !important; /* Reduced */
+        font-size: 12px !important; /* Reduced */
     }
 
     th {
         padding: 4px !important;        /* Was 10px */
-        font-size: 9px !important;      /* Was 10px */
+        font-size: 10px !important;      /* Was 10px */
     }
 
     td {
         padding: 4px 6px !important;    /* Was 8px 10px */
-        font-size: 10px !important;
+        font-size: 13px !important;
         height: 24px !important;        /* CRITICAL: smaller row height */
         line-height: 1.2 !important;
         border-bottom: 1px solid #eee !important;
@@ -381,54 +460,49 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         page-break-inside: avoid !important;
     }
 
-    /* Reduce input size inside cells */
-    td input,
-    td select {
-        font-size: 10px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        height: 18px !important;
-        background: transparent !important;
-        border: none !important;
-    }
-
-    /* Numeric fields remain readable */
-    input.item-qty,
-    input.weight,
-    input.item-hsn,
-    input.item-purity {
-        text-align: center !important;
-    }
-
-    /* Summary spacing tighten */
+    /* Keep footer at the absolute bottom of the A4 page */
     .footer-section {
-        margin-top: 10px !important;
-        gap: 20px !important;
+        margin-top: auto !important; 
+        padding-top: 2px;
+        page-break-inside: avoid;
     }
 
-    .amount-words {
-        font-size: 14px !important;
-        padding: 8px !important;
+    .shop-info h1 {
+        margin-top: 10px;
+        font-size: 62px !important;
     }
-
     .signature-box {
         margin-top: 25px !important;
     }
-
+   .amount-words {
+        font-size: 10px !important;
+        padding: 8px !important;
+    }
     .invoice-watermark {
         font-size: 60px !important;
     }
+    input {
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    /* Ensure QR code and Bank info stay compact */
+    .bank-qr img {
+        width: 80px !important;
+        height: 80px !important;
+    }
     /* Entire rate bar shrinks */
     .live-rates {
-        padding: 4px 6px !important;     /* Was ~12px */
-        margin: 4px 0 8px 0 !important;  /* Reduce vertical space */
-        border: 1px solid #ddd !important;
-        background: #fff !important;
-        border-radius: 4px !important;
-        font-size: 9px !important;
+        padding: 4px 6px !important;     
+        margin: 4px 0 8px 0 !important;  
+        background: none !important;
+        border: none !important;
+        font-size: 12px !important;
         gap: 6px !important;
         align-items: center !important;
         line-height: 1.1 !important;
+        color: #000 !important;
+        font-weight: bold
     }
 
     /* Ensure items stay on single line */
@@ -445,20 +519,22 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
     .live-rates input {
         width: 50px !important;
         height: 16px !important;
-        border: 1px solid #ccc !important;
+        /* border: 1px solid #ccc !important; */
         text-align: center !important;
         background: white !important;
         padding: 0 !important;
         font-size: 9px !important;
     }
-
-    /* Remove gold/silver theme color blocks in print */
+      /* Remove gold/silver theme color blocks in print */
     .gold-theme,
     .silver-theme {
         background: none !important;
         color: #000 !important;
         border: none !important;
         font-weight: 500 !important;
+    }
+    .summary-table div {
+        font-size: 10px;
     }
 }
 
@@ -582,12 +658,6 @@ td:nth-child(5) {
     .grand-total-row {
         font-size: 18px;
     }
-
-    .inv-meta-bar {
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-    }
 }
 
 /* Adjustments for small phones */
@@ -706,7 +776,7 @@ td:nth-child(5) {
                 </div>
                 <div class="shop-info">
                     <h1>Ranka Jewellers</h1>
-                    <p>62 Lohiya Marg, Shujalpur Mandi (Near Rokadiya Hanuman Mandir), Shujalpur, MP </p>
+                    <p>62 Lohiya Marg, Shujalpur Mandi, Shujalpur, MP </p>
                         <p> Ph: +91 9425035298, +91 9406864568</p>
                     <p style="font-size: 10px; color: #999;">GSTIN: 23AOGPR7500E1Z8</p>
                 </div>
@@ -736,8 +806,8 @@ td:nth-child(5) {
                 Gold 22k: ₹<input type="number" id="goldRate" placeholder="0" oninput="calculate()" style="width:110px" required>
                 Silver: ₹<input type="number" id="silverRate" placeholder="0" oninput="calculate()" style="width:100px" required>
             </div>
-
-            <table>
+            <div class="items-table-wrapper">
+            <table id="itemsTable">
                 <colgroup>
                     <col style="width:2%">
                     <col style="width:16%">
@@ -769,13 +839,14 @@ td:nth-child(5) {
                 </thead>
                 <tbody id="itemBody"></tbody>
             </table>
+            </div>
             <datalist id="stockSuggestions"></datalist>
             <datalist id="hsnSuggestions"></datalist>
 
             <div class="btn-group no-print">
                 <button type="button" class="btn btn-add" onclick="addRow()">+ Add New Item</button>
                 <button type="button" class="btn btn-save" onclick="saveInvoice()">Save & Print</button>
-                <!-- <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button> -->
+                <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button>
             </div>
 
             <div class="footer-section">
@@ -786,8 +857,10 @@ td:nth-child(5) {
                         <li>Purity is guaranteed as per hallmark standards.</li>
                         <li>Subject to Shujalpur Jurisdiction.</li>
                     </ul>
-                    <div class="amount-words">
-                        Total: <span id="totalInWords">Zero Rupees Only</span>
+                    
+                    <div class="signature-box" style="text-align: left; margin-bottom: 60px;">
+                        <span class="signature-line"></span>
+                        <span class="sign-label">Customer Signature</span>
                     </div>
                     <div class="bank-details-box">
                          <div class="bank-qr">
@@ -803,11 +876,6 @@ td:nth-child(5) {
                         </div>
                         
                     </div>
-                    
-                    <div class="signature-box" style="text-align: left;">
-                        <span class="signature-line"></span>
-                        <span class="sign-label">Customer Signature</span>
-                    </div>
                 </div>
                 
                 <div class="summary-table">
@@ -816,7 +884,10 @@ td:nth-child(5) {
                     <div><span>IGST (1.5%):</span> <span id="sgst">₹0.00</span></div>
                     
                     <div class="grand-total-row"><span>Grand Total:</span> <span id="grandTotal">₹0.00</span></div>
-                    
+                                    
+                    <div class="amount-words">
+                        Total : <span id="totalInWords">Zero Rupees Only</span>
+                    </div>
                     <div style="background: #f0fff4; padding: 8px; border-radius: 6px; margin-top: 5px;">
                         <span>Cash Received:</span> 
                         <input type="number" id="cashReceived" value="0" oninput="calculate()" style="background: transparent; text-align: right; width: 100px; font-weight: bold; border:none; border-bottom: 1px solid #27ae60;">
@@ -977,7 +1048,6 @@ function calculate() {
         const makingCharge = (weight * qty) * rate * makingPercent;
 
         const rowTotal = (weight * qty) * rate + makingCharge;
-        row.querySelector('.making-val').innerText = (type === 'gold') ? 12 : 0;
         row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
         totalTaxable += rowTotal;
     });
