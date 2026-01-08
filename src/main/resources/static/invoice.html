@@ -1086,7 +1086,7 @@ async function saveInvoice() {
             totalInWords: document.getElementById('totalInWords').innerText
         }
     };
-
+    let isSuccess = false;
     try {
         showLoader();
         const res = await fetch('/invoice', {
@@ -1096,10 +1096,15 @@ async function saveInvoice() {
         });
         if(res.ok) {
             sessionStorage.setItem('lastUsedRates', JSON.stringify({ gold, silver }));
-            alert('Invoice saved successfully!');
-            window.print();
+            isSuccess = true;
         } else { alert('Failed to save.'); }
     } catch (e) { alert('Server Error.'); } finally { hideLoader(); }
+    if (isSuccess) {
+        setTimeout(() => {
+            alert('Invoice saved successfully!');
+            window.print();
+        }, 100); 
+    }
 }
 </script>
 </body>
