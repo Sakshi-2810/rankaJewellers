@@ -474,12 +474,13 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         font-size: 13px !important;
         height: 24px !important;        /* CRITICAL: smaller row height */
         line-height: 1.2 !important;
-        border-bottom: 1px solid #eee !important;
+        border-bottom: 1px solid #000 !important;
     }
 
     tbody tr {
         height: 24px !important;        /* Forces compact print height */
         page-break-inside: avoid !important;
+        border-bottom: 1px solid #000 !important;
     }
 
     .shop-info h1 {
@@ -870,7 +871,7 @@ td:nth-child(5) {
             <div class="btn-group no-print">
                 <button type="button" class="btn btn-add" onclick="addRow()">+ Add New Item</button>
                 <button type="button" class="btn btn-save" onclick="saveInvoice()">Save & Print</button>
-               <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button>
+               <!-- <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button> -->
             </div>
 
             <div class="footer-section">
