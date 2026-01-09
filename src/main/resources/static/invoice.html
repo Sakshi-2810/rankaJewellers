@@ -298,7 +298,24 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         print-color-adjust: exact !important;
         margin-left: 10px;
         margin-right: 10px;
+        color: #000 !important;
+        background: #fff !important;
+        border-color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
     }
+    :root {
+        --gold: #000 !important;
+        --gold-dark: #000 !important;
+        --gold-primary: #000 !important;
+        --gold-light: #fff !important;
+        --silver: #000 !important;
+        --silver-dark: #000 !important;
+        --text-main: #000 !important;
+        --bg-body: #fff !important;
+        --dark-sidebar: #000 !important;
+    }
+
     body {
         background-color: #ffffff !important;
 
@@ -323,6 +340,10 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         right: 0 !important;
         background: transparent !important;
         page-break-inside: avoid !important;
+        margin-top: auto !important; 
+        padding-top: 2px;
+        page-break-inside: avoid;
+        margin-bottom: 15px;
     }
     .main-content {
         flex: 1 0 auto !important;
@@ -460,13 +481,6 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
         page-break-inside: avoid !important;
     }
 
-    /* Keep footer at the absolute bottom of the A4 page */
-    .footer-section {
-        margin-top: auto !important; 
-        padding-top: 2px;
-        page-break-inside: avoid;
-    }
-
     .shop-info h1 {
         margin-top: 10px;
         font-size: 62px !important;
@@ -535,6 +549,14 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
     }
     .summary-table div {
         font-size: 10px;
+    }
+    body.many-items .footer-section {
+        position: relative !important;
+        background: transparent !important;
+        page-break-inside: avoid !important;
+        margin-top: 10px 0 0 0 !important;  
+        padding-top: 10px;
+        bottom: auto !important;
     }
 }
 
@@ -772,7 +794,7 @@ td:nth-child(5) {
         <div class="invoice-box">
             <div class="row-header">
                 <div class="logo-box" style="flex-shrink: 0;">
-                    <img src="logo.jpg" alt="Company Logo" style="height: 80px;">
+                    <img src="logo.jpg" alt="Company Logo" style="height: 120px;">
                 </div>
                 <div class="shop-info">
                     <h1>Ranka Jewellers</h1>
@@ -846,7 +868,7 @@ td:nth-child(5) {
             <div class="btn-group no-print">
                 <button type="button" class="btn btn-add" onclick="addRow()">+ Add New Item</button>
                 <button type="button" class="btn btn-save" onclick="saveInvoice()">Save & Print</button>
-                <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button>
+<!--                <button type="button" class="btn btn-print" onclick="window.print()">Print Receipt</button>-->
             </div>
 
             <div class="footer-section">
@@ -1176,6 +1198,19 @@ async function saveInvoice() {
         }, 100); 
     }
 }
+window.addEventListener("beforeprint", function () {
+    const itemCount = document.querySelectorAll("tbody tr").length;
+
+    if (itemCount > 10) {
+        document.body.classList.add("many-items");
+    } else {
+        document.body.classList.remove("many-items");
+    }
+});
+
+window.addEventListener("afterprint", function () {
+    document.body.classList.remove("many-items");
+});
 </script>
 </body>
 </html>
