@@ -253,9 +253,122 @@ body {
 
 input, textarea, select { width: 100%; border: 1px solid #edf2f7; padding: 8px; border-radius: 6px; font-size: 75%; }
 input:required { border-left: 3px solid var(--gold-primary); }
+/* Enhanced Market Rates Bar */
+.live-rates div {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d4af37;
+    border-radius: 6px;
+    padding: 2px 8px;
+    margin: 0 5px;
+}
 
+/* Enhanced Market Rates Bar - No Arrow Version */
+#goldRateType {
+    appearance: none;         /* Standard */
+    -webkit-appearance: none; /* Chrome/Safari */
+    -moz-appearance: none;    /* Firefox */
+    
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    color: var(--gold-primary);
+    cursor: pointer;
+    width: 45px;             /* Reduced width since arrow is gone */
+    padding: 0 5px;
+    text-align: center;
+    border-right: 1px solid #eee;
+}
+
+/* Specific fix for IE/Edge to hide the arrow */
+#goldRateType::-ms-expand {
+    display: none;
+}
+
+/* Visual cue: Change color on hover so user knows it's clickable */
+#goldRateType:hover {
+    color: var(--gold-dark);
+    background-color: rgba(212, 175, 55, 0.05);
+}
+
+#goldRateInput {
+    border: none !important;
+    width: 90px !important;
+    font-weight: bold;
+    padding: 5px !important;
+}
+
+#goldRateInput:focus, #goldRateType:focus {
+    outline: none;
+}
+/* Purity Dropdown Styling */
+.item-purity {
+    appearance: none; /* Removes default arrow for a cleaner look */
+    -webkit-appearance: none;
+    background: #f9f9f9;
+    border: 1px solid #edf2f7;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+    cursor: pointer;
+    color: #2d3436;
+}
+
+.item-purity:hover {
+    border-color: var(--gold-primary);
+}
 .live-rates { background: var(--gold-light); padding: 12px; border-radius: 8px; display: flex; gap: 15px; align-items: center; margin-bottom: 15px; border: 1px solid #e2d1b8; }
+@media print {
+    /* Hide the dropdown arrows and borders for a "Flat" look */
+    #goldRateType, 
+    .item-purity, 
+    .type-select {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-weight: bold !important;
+        color: #000 !important;
+        width: auto !important;
+    }
 
+    /* Keep the Rate Input visible but borderless */
+    #goldRateInput {
+        border: none !important;
+        font-weight: 800 !important;
+        width: 60px !important;
+    }
+
+    /* Ensure the Market Rate container doesn't look like a box */
+    .live-rates div {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+    
+    /* Ensure the purity value is centered in its column */
+    td:nth-child(5) {
+        text-align: center;
+    }
+}
+@media screen and (max-width: 768px) {
+    .live-rates {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .live-rates div {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
 table { width: 100%; border-collapse: collapse; margin: 10px 0; }
 th { background: #fafbfc; padding: 10px; text-align: left; font-size: 10px; color: #a0aec0; text-transform: uppercase; border-bottom: 2px solid var(--gold-light); }
 td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
@@ -854,7 +967,14 @@ td:nth-child(5) {
 
             <div class="live-rates">
                 <span class="section-label" style="margin:0">Market Rates (1g):</span>
-                Gold 22k: ₹<input type="number" id="goldRate" placeholder="0" oninput="calculate()" style="width:110px" required>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <select id="goldRateType" onchange="syncGoldRates()" style="width: 60px; padding: 2px; font-size: 10px;">
+                        <option value="22K">Gold 22K</option>
+                        <option value="24K">Gold 24K</option>
+                    </select>
+                    ₹<input type="number" id="goldRateInput" placeholder="0" oninput="syncGoldRates(); calculate()" style="width:100px" required>
+                    <input type="hidden" id="goldRate22kBase">
+                </div>
                 Silver: ₹<input type="number" id="silverRate" placeholder="0" oninput="calculate()" style="width:100px" required>
             </div>
             <div class="items-table-wrapper">
@@ -978,18 +1098,34 @@ function initNewInvoice() {
     updateInvoiceDisplay();
     const storedRates = JSON.parse(sessionStorage.getItem('lastUsedRates'));
     if (storedRates) {
-        if (parseFloat(storedRates.gold) > 0) document.getElementById('goldRate').value = storedRates.gold;
+        if (parseFloat(storedRates.gold) > 0) {
+            document.getElementById('goldRate22kBase').value = storedRates.gold;
+            document.getElementById('goldRateType').value = "22K";
+            document.getElementById('goldRateInput').value = storedRates.gold;
+        }
         if (parseFloat(storedRates.silver) > 0) document.getElementById('silverRate').value = storedRates.silver;
     }
 }
+function syncGoldRates() {
+    const type = document.getElementById('goldRateType').value;
+    const val = parseFloat(document.getElementById('goldRateInput').value) || 0;
+    const baseInput = document.getElementById('goldRate22kBase');
 
+    if (type === '24K') {
+        // Convert 24K input to 22K base: (Val / 24) * 22
+        baseInput.value = (val / 24 * 22).toFixed(2);
+    } else {
+        // Input is already 22K
+        baseInput.value = val.toFixed(2);
+    }
+}
 function populateInvoiceFields(inv) {
     document.getElementById('invNum').value = inv.invoiceNumber;
     document.getElementById('invDate').value = inv.date;
     document.getElementById('custName').value = inv.customer.name;
     document.getElementById('custPhone').value = inv.customer.phone;
     document.getElementById('custAddress').value = inv.customer.address;
-    document.getElementById('goldRate').value = inv.rates.gold;
+    document.getElementById('goldRate22kBase').value = inv.rates.gold;
     document.getElementById('silverRate').value = inv.rates.silver;
     document.getElementById('cashReceived').value = inv.summary.cashReceived || 0;
     const tbody = document.getElementById('itemBody');
@@ -1045,7 +1181,13 @@ function addRow(itemData = null) {
                 <option value="silver" ${itemData && itemData.metal === 'silver' ? 'selected' : ''}>SILVER</option>
             </select>
         </td>
-        <td><input type="text" class="item-purity" value="${itemData ? itemData.purity : "22K"}" readonly></td>
+        <td>
+            <select class="item-purity" onchange="calculate()">
+                <option value="22K" ${itemData && itemData.purity === '22K' ? 'selected' : ''}>22K</option>
+                <option value="24K" ${itemData && itemData.purity === '24K' ? 'selected' : ''}>24K</option>
+                <option value="18K" ${itemData && itemData.purity === '18K' ? 'selected' : ''}>18K</option>
+            </select>
+        </td>
         <td><input type="number" class="item-qty" value="${itemData ? itemData.qty : '1'}" oninput="calculate()"></td>
         <td><input type="number" required class="weight gWeight" value="${itemData ? itemData.gWeight : ''}" placeholder="0.000" step="0.001" oninput="syncNetWeight(this)"></td>
         <td><input type="number" required class="weight nWeight" value="${itemData ? itemData.weight : ''}" placeholder="0.000" step="0.001" oninput="calculate()"></td>
@@ -1090,16 +1232,28 @@ function updateTheme(selectEl, isManual = false) {
     }
 }
 function calculate() {
-    const gRate = parseFloat(document.getElementById('goldRate').value) || 0;
+    const gRate22k = parseFloat(document.getElementById('goldRate22kBase').value) || 0;
     const sRate = parseFloat(document.getElementById('silverRate').value) || 0;
     let totalTaxable = 0;
 
     document.querySelectorAll('#itemBody tr').forEach(row => {
         const type = row.querySelector('.type').value;
+        const purity = row.querySelector('.item-purity').value;
         const weight = parseFloat(row.querySelector('.nWeight').value) || 0;
         const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-
-        let rate = (type === 'gold') ? gRate : sRate;
+        let rate = 0;
+        if (type === 'gold') {
+            // Adjust rate based on purity relative to 22K market price
+            if (purity === '24K') {
+                rate = gRate22k * (24 / 22);
+            } else if (purity === '18K') {
+                rate = gRate22k * (18 / 22);
+            } else {
+                rate = gRate22k; // Default 22K
+            }
+        } else {
+            rate = sRate;
+        }
 
         const makingPercent = (parseFloat(row.querySelector('.making-val').value) || 0) / 100; 
         const makingCharge = (weight * qty) * rate * makingPercent;
@@ -1121,7 +1275,7 @@ function calculate() {
     document.getElementById('balanceDue').innerText = "₹" + (finalGrandTotal - cash).toLocaleString('en-IN');
     document.getElementById('totalInWords').innerText = priceToWords(finalGrandTotal) + " Rupees Only";
     
-    const gold = document.getElementById('goldRate').value;
+    const gold = gRate22k;
     const silver = document.getElementById('silverRate').value;
     sessionStorage.setItem('lastUsedRates', JSON.stringify({ gold, silver }));
 }
@@ -1180,7 +1334,7 @@ async function saveInvoice() {
     const form = document.getElementById('invoiceForm');
     if (!form.reportValidity()) return;
 
-    const gold = document.getElementById('goldRate').value;
+    const gold = document.getElementById('goldRate22kBase').value;
     const silver = document.getElementById('silverRate').value;
 
     const invoice = {
