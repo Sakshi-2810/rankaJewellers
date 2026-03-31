@@ -972,7 +972,7 @@ td:nth-child(5) {
                         <option value="22K">Gold 22K</option>
                         <option value="24K">Gold 24K</option>
                     </select>
-                    ₹<input type="number" id="goldRateInput" placeholder="0" oninput="syncGoldRates(); calculate()" style="width:100px" required>
+                    ₹<input type="number" id="goldRateInput" placeholder="0" oninput="syncGoldRates()" style="width:100px" required>
                     <input type="hidden" id="goldRate22kBase">
                 </div>
                 Silver: ₹<input type="number" id="silverRate" placeholder="0" oninput="calculate()" style="width:100px" required>
@@ -1118,6 +1118,7 @@ function syncGoldRates() {
         // Input is already 22K
         baseInput.value = val.toFixed(2);
     }
+    calculate();
 }
 function populateInvoiceFields(inv) {
     document.getElementById('invNum').value = inv.invoiceNumber;
