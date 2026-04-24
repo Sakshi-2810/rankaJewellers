@@ -7,10 +7,69 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
-    /* ===============================
-   ITEM ROW TYPOGRAPHY ENHANCEMENTS
-================================= */
+/* Make each exchange row behave like summary rows */
+.exchange-section {
+    display: block;
+    width: 100%;
+    padding: 4px 0;
+    border: none; /* remove box look */
+    background: #fffcf0;
+}
 
+/* Align label left and input right */
+.exchange-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Label styling */
+.exchange-row label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Input styling (match summary look) */
+.exchange-row input {
+    width: 100px;
+    text-align: right;
+    border: none;
+    /* border-bottom: 1px solid #ccc; */
+    background: transparent;
+    font-weight: 600;
+    padding: 2px 4px;
+}
+@media screen and (max-width: 768px) {
+    .summary-table {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .exchange-row input {
+        width: 100px !important;
+    }
+}
+@media print {
+    .exchange-section {
+        padding: 2px 0 !important;
+        background: transparent !important;
+    }
+
+    .exchange-row label {
+        font-size: 10px !important;
+        color: #000 !important;
+    }
+
+    .exchange-row input {
+        border: none !important;
+        background: transparent !important;
+        width: 70px !important;
+        font-size: 10px !important;
+        font-weight: bold !important;
+    }
+}
 /* Base font refinement */
 table {
     font-size: 12px;
@@ -356,6 +415,20 @@ input:required { border-left: 3px solid var(--gold-primary); }
     td:nth-child(5) {
         text-align: center;
     }
+    .exchange-section {
+        background: transparent !important;
+        border: 1px solid #000 !important;
+        margin: 5px 0 !important;
+        padding: 5px !important;
+    }
+
+    .exchange-row input, #cashReceived {
+        border: none !important;
+        text-align: right !important;
+        width: 70px !important;
+        font-weight: bold !important;
+        background: transparent !important;
+    }
 }
 @media screen and (max-width: 768px) {
     .live-rates {
@@ -409,13 +482,13 @@ td { padding: 8px 10px; border-bottom: 1px solid #f1f4f8; }
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        margin-left: 10px;
-        margin-right: 10px;
         color: #000 !important;
         background: #fff !important;
         border-color: #000 !important;
         box-shadow: none !important;
         text-shadow: none !important;
+        margin-left: 10px;
+        margin-right: 10px;
     }
     :root {
         --gold: #000 !important;
@@ -690,6 +763,11 @@ td.making-cell {
     }
     .summary-table div {
         font-size: 10px;
+    }
+    .summary-table {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden;
     }
     body.many-items .footer-section {
         position: relative !important;
@@ -1053,15 +1131,24 @@ td:nth-child(5) {
                     <div><span>Subtotal:</span> <span id="subtotal">₹0.00</span></div>
                     <div><span>CGST (1.5%):</span> <span id="cgst">₹0.00</span></div>
                     <div><span>IGST (1.5%):</span> <span id="sgst">₹0.00</span></div>
-                    
                     <div class="grand-total-row"><span>Grand Total:</span> <span id="grandTotal">₹0.00</span></div>
                                     
                     <div class="amount-words">
                         Total : <span id="totalInWords">Zero Rupees Only</span>
                     </div>
+                    <div class="exchange-section">
+                        <div class="exchange-row">
+                            <label>Old Gold(₹):</label>
+                            <input type="number" id="goldReceived" placeholder="0" oninput="calculate()">
+                        </div>
+                        <div class="exchange-row">
+                            <label>Old Silver(₹):</label>
+                            <input type="number" id="silverReceived" placeholder="0" oninput="calculate()">
+                        </div>
+                    </div>
                     <div style="background: #f0fff4; padding: 8px; border-radius: 6px; margin-top: 5px;">
                         <span>Cash Received:</span> 
-                        <input type="number" id="cashReceived" value="0" oninput="calculate()" style="background: transparent; text-align: right; width: 100px; font-weight: bold; border:none; border-bottom: 1px solid #27ae60;">
+                        <input type="number" id="cashReceived" placeholder="0" oninput="calculate()" style="background: transparent; text-align: right; width: 100px; font-weight: bold; border:none; border-bottom: 1px solid #27ae60;">
                     </div>
                     
                     <div style="color: #e74c3c; font-weight: 600; padding: 10px 0;">
@@ -1131,6 +1218,8 @@ function populateInvoiceFields(inv) {
     document.getElementById('goldRateInput').value = inv.rates.gold;
     document.getElementById('silverRate').value = inv.rates.silver;
     document.getElementById('cashReceived').value = inv.summary.cashReceived || 0;
+    document.getElementById('goldReceived').value = inv.summary.oldGold || 0;
+    document.getElementById('silverReceived').value = inv.summary.oldSilver || 0;
     const tbody = document.getElementById('itemBody');
     tbody.innerHTML = '';
     inv.items.forEach(item => { addRow(item); });
@@ -1270,12 +1359,14 @@ function calculate() {
     const sgst = totalTaxable * 0.015;
     const finalGrandTotal = Math.round(totalTaxable + cgst + sgst);
     const cash = parseFloat(document.getElementById('cashReceived').value) || 0;
+    const oldGold = parseFloat(document.getElementById('goldReceived').value) || 0;
+    const oldSilver = parseFloat(document.getElementById('silverReceived').value) || 0;
 
     document.getElementById('subtotal').innerText = "₹" + totalTaxable.toLocaleString('en-IN', {minimumFractionDigits: 2});
     document.getElementById('cgst').innerText = "₹" + cgst.toLocaleString('en-IN', {minimumFractionDigits: 2});
     document.getElementById('sgst').innerText = "₹" + sgst.toLocaleString('en-IN', {minimumFractionDigits: 2});
     document.getElementById('grandTotal').innerText = "₹" + finalGrandTotal.toLocaleString('en-IN');
-    document.getElementById('balanceDue').innerText = "₹" + (finalGrandTotal - cash).toLocaleString('en-IN');
+    document.getElementById('balanceDue').innerText = "₹" + (finalGrandTotal - cash - oldGold - oldSilver).toLocaleString('en-IN');
     document.getElementById('totalInWords').innerText = priceToWords(finalGrandTotal) + " Rupees Only";
     
     const gold = gRate22k;
@@ -1366,6 +1457,8 @@ async function saveInvoice() {
             sgst: parseFloat(document.getElementById('sgst').innerText.replace(/₹|,/g,'')),
             grandTotal: parseFloat(document.getElementById('grandTotal').innerText.replace(/₹|,/g,'')),
             cashReceived: parseFloat(document.getElementById('cashReceived').value),
+            oldGold: parseFloat(document.getElementById('goldReceived').value),
+            oldSilver: parseFloat(document.getElementById('silverReceived').value),
             balanceDue: parseFloat(document.getElementById('balanceDue').innerText.replace(/₹|,/g,'')),
             totalInWords: document.getElementById('totalInWords').innerText
         }

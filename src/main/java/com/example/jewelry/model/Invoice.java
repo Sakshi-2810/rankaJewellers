@@ -50,6 +50,8 @@ public class Invoice {
         private double cgst;
         private double sgst;
         private double grandTotal;
+        private double oldGold;
+        private double oldSilver;
         private double cashReceived;
         private double balanceDue;
         private String totalInWords;
