@@ -1456,9 +1456,9 @@ async function saveInvoice() {
             cgst: parseFloat(document.getElementById('cgst').innerText.replace(/₹|,/g,'')),
             sgst: parseFloat(document.getElementById('sgst').innerText.replace(/₹|,/g,'')),
             grandTotal: parseFloat(document.getElementById('grandTotal').innerText.replace(/₹|,/g,'')),
-            cashReceived: parseFloat(document.getElementById('cashReceived').value),
-            oldGold: parseFloat(document.getElementById('goldReceived').value),
-            oldSilver: parseFloat(document.getElementById('silverReceived').value),
+            cashReceived: parseFloat(document.getElementById('cashReceived').value) || 0,
+            oldGold: parseFloat(document.getElementById('goldReceived').value) || 0,
+            oldSilver: parseFloat(document.getElementById('silverReceived').value) || 0,
             balanceDue: parseFloat(document.getElementById('balanceDue').innerText.replace(/₹|,/g,'')),
             totalInWords: document.getElementById('totalInWords').innerText
         }
