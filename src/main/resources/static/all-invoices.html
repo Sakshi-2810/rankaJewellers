@@ -430,6 +430,7 @@
             if(!invoices||invoices.length===0){
                 body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:#999;">No invoices found</td></tr>'
             }else{
+                invoices.reverse();
                 invoices.forEach(inv=>{
                     const bal=inv.summary.balanceDue
                     body.innerHTML+=`
