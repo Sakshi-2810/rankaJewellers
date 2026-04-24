@@ -15,6 +15,7 @@ public class Invoice {
     private Rates rates;
     private List<Item> items;
     private Summary summary;
+    private String paymentMethod;
 
     // Getters & Setters
 

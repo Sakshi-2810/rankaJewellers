@@ -8,6 +8,56 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
 /* Make each exchange row behave like summary rows */
+.payment-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* The Card Snippet */
+.payment-card {
+    background: #f0fff4;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #dcfce7;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.payment-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Header Flex Layout */
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-header span {
+    font-size: 14px;
+    color: #2d3436;
+    font-weight: 500;
+}
+
+/* Styled Dropdown */
+#paymentMethod {
+    border: 2px solid transparent;
+    background: #ffffff;
+    font-weight: 700;
+    color: #27ae60;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#paymentMethod:focus {
+    border-color: #27ae60;
+}
 .exchange-section {
     display: block;
     width: 100%;
@@ -1111,6 +1161,17 @@ td:nth-child(5) {
                         <span class="signature-line"></span>
                         <span class="sign-label">Customer Signature</span>
                     </div>
+                    <div class="payment-container">
+                        <div class="payment-card">
+                            <div class="payment-header">
+                                <span>Payment Mode:</span>
+                                <select id="paymentMethod">
+                                    <option value="Cash">CASH</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="bank-details-box">
                          <div class="bank-qr">
                             <img src="phonePay.jpg" alt="PhonePe QR">
@@ -1220,6 +1281,7 @@ function populateInvoiceFields(inv) {
     document.getElementById('cashReceived').value = inv.summary.cashReceived || 0;
     document.getElementById('goldReceived').value = inv.summary.oldGold || 0;
     document.getElementById('silverReceived').value = inv.summary.oldSilver || 0;
+    document.getElementById('paymentMethod').value = inv.paymentMethod || 'Cash';
     const tbody = document.getElementById('itemBody');
     tbody.innerHTML = '';
     inv.items.forEach(item => { addRow(item); });
@@ -1434,6 +1496,7 @@ async function saveInvoice() {
     const invoice = {
         invoiceNumber: document.getElementById('invNum').value,
         date: document.getElementById('invDate').value,
+        paymentMethod: document.getElementById('paymentMethod').value,
         customer: {
             name: document.getElementById('custName').value,
             phone: document.getElementById('custPhone').value,
